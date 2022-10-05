@@ -48,7 +48,6 @@ const endTaskControl = (list, data, userName) => {
 const deleteControl = (list, data, userName) => {
   const exit = () => {
     const yesOrNo = confirm('Удалить задачу?', '');
-    // console.log(yesOrNo);
     return yesOrNo;
   };
 
@@ -74,57 +73,21 @@ const formControl = (form, list, btnSave, data, user) => {
     return num;
   };
 
-  // const foo1 = (elem) => {
-  //   elem.addEventListener('click', function foo() {
-  //     const input = document.createElement('input');
-  //     input.value = this.innerHTML;
-  //     this.innerHTML = '';
-  //     this.appendChild(input);
-
-  //     const td = this;
-  //     input.addEventListener('blur', function () {
-  //       td.innerHTML = this.value;
-  //       td.addEventListener('click', foo);
-  //     })
-  //     this.removeEventListener('click', foo);
-  //   });
-  // };
-
-
-  // };
-
-  // list.addEventListener('click', e => {
-  //   const target = e.target;
-  //   if (target.closest('.task') &&
-  //   target.closest('.task').hasAttribute('contenteditable')) {
-  //     const task = target.closest('.task');
-  //     // const tasks = document.querySelectorAll('.task');
-  //     // for (let i = 0; i <= tasks.length; i++) {
-  //       const input = document.createElement('input');
-  //       const textValue = task.innerHTML;
-  //       task.innerHTML = '';
-  //       task.append(input);
-  //       input.value = textValue;
-
-  //     // }
-  //     // const task = target.closest('.row-tr').querySelector('.task');
-  //     // task.setAttribute('contenteditable', true);
-  //     console.log(target);
-  //     // input.removeEventListener('click', foo);
-  //   }
-  // }, { once: true });
-  const editTask = (btnEdit, task) => {
+  const editTask = () => {
     list.addEventListener('click', e => {
       const target = e.target;
       if (target.closest('.btn-finish')) {
-        btnEdit.innerHTML = 'Редактировать';
-        btnEdit.classList.remove('btn-finish');
-        btnEdit.classList.add('btn-edit');
+        const task = target.closest('.row-tr').querySelector('.task');
+        const btnEnd = target.closest('.row-tr').querySelector('.btn-end');
+        btnEnd.removeAttribute('disabled');
+        const btnFinish = target.closest('.btn-finish');
+        task.classList.remove('bg-secondary');
+        btnFinish.innerHTML = 'Редактировать';
+        btnFinish.classList.remove('btn-finish');
+        btnFinish.classList.add('btn-edit');
         task.removeAttribute('contenteditable');
         const newTask = task.innerHTML;
         const id = target.closest('.row-tr').id;
-        console.log(newTask);
-        console.log(id);
         editTaskNameStorage(data, newTask, id, user);
       }
     });
@@ -136,16 +99,17 @@ const formControl = (form, list, btnSave, data, user) => {
     if (target.closest('.btn-edit')) {
       const btnEdit = target.closest('.btn-edit');
       const task = target.closest('.row-tr').querySelector('.task');
+      const btnEnd = target.closest('.row-tr').querySelector('.btn-end');
       task.setAttribute('contenteditable', true);
-      // console.log(target);
-      task.addEventListener('click', () => {
-        if (task.hasAttribute('contenteditable')) {
-          btnEdit.innerHTML = 'Сохранить';
-          btnEdit.classList.remove('btn-edit');
-          btnEdit.classList.add('btn-finish');
-          editTask(btnEdit, task);
-          // console.log('работает');
-        }
+      task.focus();
+
+      task.addEventListener('keydown', () => {
+        btnEnd.setAttribute('disabled', 'disabled');
+        task.classList.add('bg-secondary');
+        btnEdit.innerHTML = 'Сохранить';
+        btnEdit.classList.remove('btn-edit');
+        btnEdit.classList.add('btn-finish');
+        editTask();
       });
     }
   });
@@ -173,7 +137,6 @@ const formControl = (form, list, btnSave, data, user) => {
     newContact.id = randomIntFromInterval(100000, 200000);
     newContact.status = 'В процессе';
     const id = newContact.id;
-    // console.log('newContact', newContact);
 
     addTaskPage(newContact, list, id);
     addNoteData(data, newContact, user);

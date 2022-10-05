@@ -24,7 +24,6 @@ const removeStorage = (id, data, user) => {
     for (let i = 0; i < data.length; i++) {
         if (id === data[i].id) {
             data.splice(i, 1);
-            // console.log('работает');
         }
     }
     setStorage(user, data);
@@ -36,7 +35,6 @@ const editTaskNameStorage = (data, newTask, id, user) => {
         if (id === data[i].id) {
             data[i].task = '';
             data[i].task = newTask;
-            console.log('работает');
         }
         setStorage(user, data);
     };
